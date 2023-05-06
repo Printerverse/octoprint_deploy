@@ -761,9 +761,8 @@ prepare () {
             echo 'type: octopi' >> /etc/octoprint_deploy
             echo
             echo
-            if prompt_confirm "Would you like to install recommended plugins now?"; then
-                plugin_menu
-            fi
+            echo 'Installing Octoprint-NanoFactory' | log
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
             systemctl restart octoprint.service
@@ -922,9 +921,8 @@ prepare () {
             systemctl enable octoprint_default.service
             echo
             echo
-            if prompt_confirm "Would you like to install recommended plugins now?"; then
-                plugin_menu
-            fi
+            echo 'Installing Octoprint-NanoFactory' | log
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
             #this restart seems necessary in some cases
