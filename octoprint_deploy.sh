@@ -643,6 +643,8 @@ deb_packages() {
     -e ssh\
     -e libffi-dev\
     -e haproxy\
+    -e chromium\
+    -e chromium-browser\
     | xargs apt-get install -y | log
     
     #pacakges to REMOVE go here
