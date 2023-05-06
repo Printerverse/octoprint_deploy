@@ -766,9 +766,6 @@ prepare () {
             fi
             echo
             echo
-            if prompt_confirm "Would you like to install cloud service plugins now?"; then
-                plugin_menu_cloud
-            fi
             systemctl restart octoprint.service
             
         fi
@@ -930,9 +927,6 @@ prepare () {
             fi
             echo
             echo
-            if prompt_confirm "Would you like to install cloud service plugins now?"; then
-                plugin_menu_cloud
-            fi
             #this restart seems necessary in some cases
             systemctl restart octoprint_default.service
         fi
