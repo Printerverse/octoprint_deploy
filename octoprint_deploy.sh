@@ -969,8 +969,6 @@ generate_nanofactory_apikey (){
 }
 
 install_yq(){
-    echo 
-    echo 
     echo "Installing yq..." | log
     # Download the latest `yq` binary release
     curl -sL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o yq
@@ -1023,8 +1021,6 @@ firstrun() {
         echo
         echo
         echo "Completing first run wizards" | log
-        echo
-        echo
         $OCTOEXEC config set server.firstRun false --bool | log
         $OCTOEXEC config set server.seenWizards.backup null | log
         $OCTOEXEC config set server.seenWizards.corewizard 4 --int | log
