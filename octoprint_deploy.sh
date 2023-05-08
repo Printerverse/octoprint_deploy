@@ -773,6 +773,7 @@ prepare () {
             echo
             echo 'Installing Octoprint-NanoFactory' | log
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
+            install_yq
             echo
             echo
             systemctl restart octoprint.service
@@ -840,34 +841,12 @@ prepare () {
             echo
             echo 'Installing Octoprint-NanoFactory' | log
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
-            #Haproxy
-            # echo
-            # echo
-            # echo 'You have the option of setting up haproxy.'
-            # echo 'This binds instances to a name on port 80 instead of having to type the port.'
-            # echo
-            # echo
-            # if prompt_confirm "Use haproxy?"; then
-            #     echo 'haproxy: true' >> /etc/octoprint_deploy
-            #     #Check if using improved haproxy rules
-            #     echo 'haproxynew: true' >> /etc/octoprint_deploy
-            #     systemctl stop haproxy
-            #     #get haproxy version
-            #     HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
-            #     mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.orig
-            #     if [ $HAversion -gt 1 ]; then
-            #         cp $SCRIPTDIR/haproxy2x.basic /etc/haproxy/haproxy.cfg
-            #     else
-            #         cp $SCRIPTDIR/haproxy1x.basic /etc/haproxy/haproxy.cfg
-            #     fi
-            #     systemctl start haproxy
-            #     systemctl enable haproxy
-            # else
-                systemctl stop haproxy
-                systemctl disable haproxy
-            # fi
-            
-            # echo
+            install_yq
+            echo 
+            echo 
+            echo "Disabling haproxy..."
+            systemctl stop haproxy
+            systemctl disable haproxy
             echo
             echo
             PS3='Which video streamer you would like to install?: '
@@ -957,6 +936,20 @@ prepare () {
         
     fi
     main_menu
+}
+
+install_yq(){
+    echo 
+    echo 
+    echo "Installing yq" | log
+    # Download the latest `yq` binary release
+    curl -sL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o yq
+
+    # Make the binary executable
+    chmod +x yq
+
+    # Move the binary to a directory in the system's `PATH`
+    mv yq /usr/local/bin/
 }
 
 firstrun() {
