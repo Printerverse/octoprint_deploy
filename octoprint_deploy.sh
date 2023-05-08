@@ -851,7 +851,7 @@ prepare () {
                 systemctl disable haproxy
             # fi
             
-            echo
+            # echo
             echo
             echo
             PS3='Which video streamer you would like to install?: '
