@@ -758,6 +758,7 @@ prepare () {
             echo 'haproxy: true' >> /etc/octoprint_deploy
             echo 'Modifying config.yaml'
             cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
+            cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
             firstrun
             echo 'Connect to your octoprint (octopi.local) instance and setup admin user if you have not already'
             echo 'type: octopi' >> /etc/octoprint_deploy
@@ -824,6 +825,7 @@ prepare () {
             echo 'Updating config.yaml'
             sudo -u $user mkdir /home/$user/.octoprint
             sudo -u $user cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
+            sudo -u $user cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
             echo
             echo
             echo 'Installing Octoprint-NanoFactory' | log
