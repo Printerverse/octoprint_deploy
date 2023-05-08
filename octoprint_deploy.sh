@@ -618,6 +618,7 @@ deb_packages() {
     apt-cache --generate pkgnames \
     | grep --line-regexp --fixed-strings \
     -e make \
+    -e curl \
     -e v4l-utils \
     -e python-is-python3 \
     -e python3-venv \
