@@ -950,17 +950,12 @@ prepare () {
 firstrun() {
     echo
     echo
-    echo 'The template instance can be configured at this time.'
-    echo 'This includes setting up the admin user and finishing the startup wizards.'
-    echo 'If you do these now, you will not have to connect to the template with a browser.'
-    echo
-    echo
-    if prompt_confirm "Do you want to setup your admin user now?"; then
+    echo "Please setup your admin user now:"; 
         while true; do
         echo 'Enter admin user name (no spaces): '
         read OCTOADMIN
         if [ -z "$OCTOADMIN" ]; then
-            echo -e "No admin user given! Defaulting to: \033[0;31moctoadmin\033[0m"
+            echo -e "No admin user given! Defaulting to: \033[0;31mroot\033[0m"
             OCTOADMIN=octoadmin
         fi
         if ! has-space "$OCTOADMIN"; then
@@ -975,7 +970,7 @@ firstrun() {
         echo 'Enter admin user password (no spaces): '
         read OCTOPASS
         if [ -z "$OCTOPASS" ]; then
-            echo -e "No password given! Defaulting to: \033[0;31mfooselrulz\033[0m. Please CHANGE this."
+            echo -e "No password given! Defaulting to: \033[0;31mtoor\033[0m. Please CHANGE this."
             OCTOPASS=fooselrulz
         fi
 
@@ -989,41 +984,20 @@ firstrun() {
         echo "Admin password: $OCTOPASS"
         $OCTOEXEC user add $OCTOADMIN --password $OCTOPASS --admin | log
 
-    fi
     if [ -n "$OCTOADMIN" ]; then
         echo
         echo
-        echo "The script can complete the first run wizards now. For more information on these, see the OctoPrint website."
-        echo "It is standard to accept these, as no identifying information is exposed through their usage."
+        echo "Completing first run wizards" | log
         echo
         echo
-        if prompt_confirm "Do first run wizards now?"; then
-            $OCTOEXEC config set server.firstRun false --bool | log
-            $OCTOEXEC config set server.seenWizards.backup null | log
-            $OCTOEXEC config set server.seenWizards.corewizard 4 --int | log
+        $OCTOEXEC config set server.firstRun false --bool | log
+        $OCTOEXEC config set server.seenWizards.backup null | log
+        $OCTOEXEC config set server.seenWizards.corewizard 4 --int | log
+        $OCTOEXEC config set server.onlineCheck.enabled true --bool | log
+        $OCTOEXEC config set server.pluginBlacklist.enabled true --bool | log
+        $OCTOEXEC config set plugins.tracking.enabled false --bool | log
+        $OCTOEXEC config set printerProfiles.default _default | log
             
-            if prompt_confirm "Enable online connectivity check?"; then
-                $OCTOEXEC config set server.onlineCheck.enabled true --bool
-            else
-                $OCTOEXEC config set server.onlineCheck.enabled false --bool
-            fi
-            
-            if prompt_confirm "Enable plugin blacklisting?"; then
-                $OCTOEXEC config set server.pluginBlacklist.enabled true --bool
-            else
-                $OCTOEXEC config set server.pluginBlacklist.enabled false --bool
-            fi
-            
-            if prompt_confirm "Enable anonymous usage tracking?"; then
-                $OCTOEXEC config set plugins.tracking.enabled true --bool
-            else
-                $OCTOEXEC config set plugins.tracking.enabled false --bool
-            fi
-            
-            if prompt_confirm "Use default printer (can be changed later)?"; then
-                $OCTOEXEC config set printerProfiles.default _default
-            fi
-        fi
     fi
     
 }
