@@ -187,6 +187,10 @@ new_instance () {
             echo "Template path is not valid! Aborting" | log
             main_menu
         fi
+    
+        if prompt_confirm "Specify a different Master Device ID?"; then
+            master_device_id_input "/home/$user/.$INSTANCE/data"
+        fi 
     fi
     
     #check to make sure first run is complete
@@ -347,7 +351,7 @@ new_instance () {
     fi
     echo
     echo
-    master_device_id_input "/home/$user/.$INSTANCE/data"
+    echo "Instance Created"
     echo 
     echo
     main_menu
@@ -988,6 +992,7 @@ master_device_id_input(){
         if [ -z "$MASTER_DEVICE_ID" ]; then
             echo -e "No Master Device ID given!"
             MASTER_DEVICE_ID=""
+
         fi
         if ! has-space "$MASTER_DEVICE_ID"; then
             break
