@@ -757,6 +757,13 @@ prepare () {
             echo "$user ALL=NOPASSWD: /usr/sbin/reboot" > /etc/sudoers.d/octoprint_reboot
             echo 'haproxy: true' >> /etc/octoprint_deploy
             echo 'Modifying config.yaml' | log
+            # Checking for existence of appkeys folder
+            if [ ! -d "/home/$user/.octoprint/data" ]; then
+                mkdir -p "/home/$user/.octoprint/data"
+            fi
+            if [ ! -d "/home/$user/.octoprint/data/appkeys" ]; then
+                mkdir -p "/home/$user/.octoprint/data/appkeys"
+            fi
             cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
             cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
             firstrun
@@ -824,6 +831,9 @@ prepare () {
             -e "s/NEWPORT/5000/" > /etc/systemd/system/octoprint_default.service
             echo 'Updating config.yaml' | log
             sudo -u $user mkdir /home/$user/.octoprint
+            # Creating appkeys folder
+            sudo -u $user mkdir /home/$user/.octoprint/data
+            sudo -u $user mkdir /home/$user/.octoprint/data/appkeys
             sudo -u $user cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
             sudo -u $user cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
             echo
