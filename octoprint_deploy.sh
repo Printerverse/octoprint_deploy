@@ -941,9 +941,6 @@ prepare () {
 }
 
 generate_nanofactory_apikey(){
-
-    echo 
-    echo
     echo "Generating NanoFactory API Key" | log
 
     data_dir_path="$1"
@@ -954,7 +951,7 @@ generate_nanofactory_apikey(){
 
     # Update the key in the yaml file
     yq eval '.'"$username"'[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
-    yq eval '.'"$username"'[0].app_id = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
+    yq eval '.'"$username"'[0].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
 
     if [ ! -d "$data_dir_path"/NanoFactory ]; then
         mkdir -p "$data_dir_path"/NanoFactory
@@ -967,7 +964,7 @@ generate_nanofactory_apikey(){
 install_yq(){
     echo 
     echo 
-    echo "Installing yq" | log
+    echo "Installing yq..." | log
     # Download the latest `yq` binary release
     curl -sL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o yq
 
@@ -987,7 +984,7 @@ firstrun() {
         read OCTOADMIN
         if [ -z "$OCTOADMIN" ]; then
             echo -e "No admin user given! Defaulting to: \033[0;31mAdmin\033[0m"
-            OCTOADMIN=octoadmin
+            OCTOADMIN=Admin
         fi
         if ! has-space "$OCTOADMIN"; then
             break
@@ -1002,7 +999,7 @@ firstrun() {
         read OCTOPASS
         if [ -z "$OCTOPASS" ]; then
             echo -e "No password given! Defaulting to: \033[0;31mprinterverse\033[0m. Please CHANGE this."
-            OCTOPASS=fooselrulz
+            OCTOPASS=printerverse
         fi
 
         if ! has-space "$OCTOPASS"; then
