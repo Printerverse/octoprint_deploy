@@ -955,9 +955,8 @@ generate_nanofactory_apikey (){
         yq eval '.'"$username"'[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
         yq eval '.'"$username"'[0].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
     else
-        yq eval '.[].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
-        yq eval '.[].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
-
+        yq eval '. as $root | select(.[][]? | has("api_key")) | .[].api_key = "'"$key"'" | $root' "$data_dir_path"/appkeys/keys.yaml
+        # yq eval '.[].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
     fi
 
     if [ ! -d "$data_dir_path"/NanoFactory ]; then
