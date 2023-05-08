@@ -285,7 +285,7 @@ new_instance () {
         $DAEMONPATH --basedir $OCTOCONFIG/.$INSTANCE config set plugins.errortracking.unique_id $(uuidgen)
         $DAEMONPATH --basedir $OCTOCONFIG/.$INSTANCE config set plugins.tracking.unique_id $(uuidgen)
         $DAEMONPATH --basedir $OCTOCONFIG/.$INSTANCE config set serial.port /dev/octo_$INSTANCE
-        generate_nanofactory_apikey "$OCTOCONFIG/.$INSTANCE/data"
+        generate_nanofactory_apikey "$OCTOCONFIG/.$INSTANCE/data" "$OCTOUSER"
 
         if [ "$HAPROXY" == true ]; then
             HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
@@ -768,6 +768,7 @@ prepare () {
             fi
             cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
             cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
+            install_yq
             firstrun
             echo 'Connect to your octoprint (octopi.local) instance and setup admin user if you have not already'
             echo 'type: octopi' >> /etc/octoprint_deploy
@@ -775,8 +776,6 @@ prepare () {
             echo
             echo 'Installing Octoprint-NanoFactory' | log
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
-            install_yq
-            generate_nanofactory_apikey "/home/$user/.octoprint/data"
             echo
             echo
             systemctl restart octoprint.service
@@ -845,7 +844,6 @@ prepare () {
             echo 'Installing Octoprint-NanoFactory' | log
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             install_yq
-            generate_nanofactory_apikey "/home/$user/.octoprint/data"
             echo 
             echo 
             echo "Disabling haproxy..."
@@ -944,16 +942,22 @@ prepare () {
 
 generate_nanofactory_apikey(){
 
+    echo 
+    echo
+    echo "Generating NanoFactory API Key" | log
+
     data_dir_path="$1"
+    username="$2"
 
     # Generate the key 
     key=$(openssl rand -hex 16 | tr '[:lower:]' '[:upper:]' | tr -dc 'A-Z0-9' | head -c 32)
 
     # Update the key in the yaml file
-    yq eval '.root[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
+    yq eval '.'"$username"'[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
+    yq eval '.'"$username"'[0].app_id = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
 
-    if [ ! -d "$data_dir_path/NanoFactory" ]; then
-        mkdir -p "$data_dir_path/NanoFactory"
+    if [ ! -d "$data_dir_path"/NanoFactory ]; then
+        mkdir -p "$data_dir_path"/NanoFactory
     fi
 
     # Putting the key into the apiKey.txt file 
@@ -982,7 +986,7 @@ firstrun() {
         echo 'Enter admin user name (no spaces): '
         read OCTOADMIN
         if [ -z "$OCTOADMIN" ]; then
-            echo -e "No admin user given! Defaulting to: \033[0;31mroot\033[0m"
+            echo -e "No admin user given! Defaulting to: \033[0;31mAdmin\033[0m"
             OCTOADMIN=octoadmin
         fi
         if ! has-space "$OCTOADMIN"; then
@@ -997,7 +1001,7 @@ firstrun() {
         echo 'Enter admin user password (no spaces): '
         read OCTOPASS
         if [ -z "$OCTOPASS" ]; then
-            echo -e "No password given! Defaulting to: \033[0;31mtoor\033[0m. Please CHANGE this."
+            echo -e "No password given! Defaulting to: \033[0;31mprinterverse\033[0m. Please CHANGE this."
             OCTOPASS=fooselrulz
         fi
 
@@ -1024,6 +1028,8 @@ firstrun() {
         $OCTOEXEC config set server.pluginBlacklist.enabled true --bool | log
         $OCTOEXEC config set plugins.tracking.enabled false --bool | log
         $OCTOEXEC config set printerProfiles.default _default | log
+
+        generate_nanofactory_apikey "/home/$user/.octoprint/data" "$OCTOADMIN"
             
     fi
     
