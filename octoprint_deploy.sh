@@ -824,6 +824,10 @@ prepare () {
             echo 'Updating config.yaml'
             sudo -u $user mkdir /home/$user/.octoprint
             sudo -u $user cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
+            echo
+            echo
+            echo 'Installing Octoprint-NanoFactory' | log
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             #Haproxy
             # echo
             # echo
@@ -921,10 +925,6 @@ prepare () {
             echo -e "\033[0;31mConnect to your template instance and setup the admin user if you have not done so already.\033[0m"
             systemctl start octoprint_default.service
             systemctl enable octoprint_default.service
-            echo
-            echo
-            echo 'Installing Octoprint-NanoFactory' | log
-            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
             #this restart seems necessary in some cases
