@@ -952,11 +952,11 @@ generate_nanofactory_apikey (){
     # Update the key in the yaml file
 
     if [ -n "$username" ]; then
-        yq eval '.[].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
-        yq eval '.[].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
-    else
         yq eval '.'"$username"'[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
         yq eval '.'"$username"'[0].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
+    else
+        yq eval '.[].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
+        yq eval '.[].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
 
     fi
 
