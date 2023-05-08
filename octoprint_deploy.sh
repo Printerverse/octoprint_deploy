@@ -825,31 +825,31 @@ prepare () {
             sudo -u $user mkdir /home/$user/.octoprint
             sudo -u $user cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
             #Haproxy
-            echo
-            echo
-            echo 'You have the option of setting up haproxy.'
-            echo 'This binds instances to a name on port 80 instead of having to type the port.'
-            echo
-            echo
-            if prompt_confirm "Use haproxy?"; then
-                echo 'haproxy: true' >> /etc/octoprint_deploy
-                #Check if using improved haproxy rules
-                echo 'haproxynew: true' >> /etc/octoprint_deploy
-                systemctl stop haproxy
-                #get haproxy version
-                HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
-                mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.orig
-                if [ $HAversion -gt 1 ]; then
-                    cp $SCRIPTDIR/haproxy2x.basic /etc/haproxy/haproxy.cfg
-                else
-                    cp $SCRIPTDIR/haproxy1x.basic /etc/haproxy/haproxy.cfg
-                fi
-                systemctl start haproxy
-                systemctl enable haproxy
-            else
+            # echo
+            # echo
+            # echo 'You have the option of setting up haproxy.'
+            # echo 'This binds instances to a name on port 80 instead of having to type the port.'
+            # echo
+            # echo
+            # if prompt_confirm "Use haproxy?"; then
+            #     echo 'haproxy: true' >> /etc/octoprint_deploy
+            #     #Check if using improved haproxy rules
+            #     echo 'haproxynew: true' >> /etc/octoprint_deploy
+            #     systemctl stop haproxy
+            #     #get haproxy version
+            #     HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
+            #     mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.orig
+            #     if [ $HAversion -gt 1 ]; then
+            #         cp $SCRIPTDIR/haproxy2x.basic /etc/haproxy/haproxy.cfg
+            #     else
+            #         cp $SCRIPTDIR/haproxy1x.basic /etc/haproxy/haproxy.cfg
+            #     fi
+            #     systemctl start haproxy
+            #     systemctl enable haproxy
+            # else
                 systemctl stop haproxy
                 systemctl disable haproxy
-            fi
+            # fi
             
             echo
             echo
