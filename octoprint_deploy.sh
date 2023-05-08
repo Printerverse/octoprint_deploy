@@ -285,7 +285,6 @@ new_instance () {
         $DAEMONPATH --basedir $OCTOCONFIG/.$INSTANCE config set plugins.errortracking.unique_id $(uuidgen)
         $DAEMONPATH --basedir $OCTOCONFIG/.$INSTANCE config set plugins.tracking.unique_id $(uuidgen)
         $DAEMONPATH --basedir $OCTOCONFIG/.$INSTANCE config set serial.port /dev/octo_$INSTANCE
-        generate_nanofactory_apikey "$OCTOCONFIG/.$INSTANCE/data" 
 
         if [ "$HAPROXY" == true ]; then
             HAversion=$(haproxy -v | sed -n 's/^.*version \([0-9]\).*/\1/p')
@@ -944,20 +943,15 @@ generate_nanofactory_apikey (){
     echo "Generating NanoFactory API Key" | log
 
     data_dir_path="$1"
-    username="${2:-}"
+    username="$2"
 
     # Generate the key 
     key=$(openssl rand -hex 16 | tr '[:lower:]' '[:upper:]' | tr -dc 'A-Z0-9' | head -c 32)
 
     # Update the key in the yaml file
+    yq eval '.'"$username"'[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
+    yq eval '.'"$username"'[0].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
 
-    if [ -n "$username" ]; then
-        yq eval '.'"$username"'[0].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
-        yq eval '.'"$username"'[0].app_id = "NanoFactory"' "$data_dir_path"/appkeys/keys.yaml -i
-    else
-        yq eval '. as $root | select(.[][]? | has("api_key")) | .[].api_key = "'"$key"'" | $root' "$data_dir_path"/appkeys/keys.yaml
-        # yq eval '.[].api_key = "'"$key"'"' "$data_dir_path"/appkeys/keys.yaml -i
-    fi
 
     if [ ! -d "$data_dir_path"/NanoFactory ]; then
         mkdir -p "$data_dir_path"/NanoFactory
