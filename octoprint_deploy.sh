@@ -238,6 +238,10 @@ new_instance () {
         fi
     fi
     echo
+    echo
+    master_device_id_input "/home/$user/.$INSTANCE/data"
+    echo 
+    echo
     
     if prompt_confirm "Ready to write all changes. Do you want to proceed?"
     then
@@ -777,6 +781,7 @@ prepare () {
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
+            
             systemctl restart octoprint.service
             
         fi
@@ -842,6 +847,11 @@ prepare () {
             echo
             echo 'Installing Octoprint-NanoFactory' | log
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
+            echo
+            echo
+            master_device_id_input "/home/$user/.octoprint/data"
+            echo 
+            echo
             install_yq
             echo 
             echo 
@@ -959,6 +969,29 @@ generate_nanofactory_apikey (){
 
     # Putting the key into the apiKey.txt file 
     echo "$key" > "$data_dir_path"/NanoFactory/apiKey.txt
+}
+
+master_device_id_input(){
+    while true; do
+        echo 'Enter Master Device ID: '
+        read MASTER_DEVICE_ID
+        if [ -z "$MASTER_DEVICE_ID" ]; then
+            echo -e "No Master Device ID given!"
+            MASTER_DEVICE_ID=""
+        fi
+        if ! has-space "$MASTER_DEVICE_ID"; then
+            break
+        else
+            echo "Master Device ID must not have spaces."
+        fi
+        done
+
+    echo "Master Device ID: $MASTER_DEVICE_ID" | log
+
+    data_dir_path="$1"
+
+    # Write the master device id to masterDeviceID.txt
+    echo "$MASTER_DEVICE_ID" > "$data_dir_path"/NanoFactory/masterDeviceID.txt
 }
 
 install_yq(){
