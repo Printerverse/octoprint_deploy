@@ -756,7 +756,7 @@ prepare () {
             echo "$user ALL=NOPASSWD: /usr/bin/systemctl" > /etc/sudoers.d/octoprint_systemctl
             echo "$user ALL=NOPASSWD: /usr/sbin/reboot" > /etc/sudoers.d/octoprint_reboot
             echo 'haproxy: true' >> /etc/octoprint_deploy
-            echo 'Modifying config.yaml'
+            echo 'Modifying config.yaml' | log
             cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
             cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
             firstrun
@@ -822,7 +822,7 @@ prepare () {
             -e "s#OCTOCONFIG#/home/$user/#" \
             -e "s/NEWINSTANCE/octoprint/" \
             -e "s/NEWPORT/5000/" > /etc/systemd/system/octoprint_default.service
-            echo 'Updating config.yaml'
+            echo 'Updating config.yaml' | log
             sudo -u $user mkdir /home/$user/.octoprint
             sudo -u $user cp -p $SCRIPTDIR/config.basic /home/$user/.octoprint/config.yaml
             sudo -u $user cp -p $SCRIPTDIR/keys.basic /home/$user/.octoprint/data/appkeys/keys.yaml
