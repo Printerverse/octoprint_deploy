@@ -331,6 +331,9 @@ new_instance () {
         fi
 
         if prompt_confirm "Specify a different Master Device ID for NanoFactory?"; then
+            # The template instance create the nf_profile for all instances
+            # Hence to change the Master Device ID, we need to delete the nf_profile
+            rm -f /home/$user/.$INSTANCE/data/NanoFactory/nf_profile.json
             master_device_id_input "/home/$user/.$INSTANCE/data/NanoFactory"
         fi 
         
