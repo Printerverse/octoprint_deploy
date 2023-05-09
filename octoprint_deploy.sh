@@ -787,7 +787,7 @@ prepare () {
             echo
             echo
             echo 'Installing Octoprint-NanoFactory' | log
-            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/refs/heads/dev.zip"
             echo
             echo
             initialize_nanofactory
@@ -854,7 +854,7 @@ prepare () {
             echo
             echo
             echo 'Installing Octoprint-NanoFactory' | log
-            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/refs/heads/dev.zip"
             echo
             echo
             install_yq
