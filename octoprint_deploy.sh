@@ -657,8 +657,6 @@ deb_packages() {
     -e ssh\
     -e libffi-dev\
     -e haproxy\
-    -e chromium\
-    -e chromium-browser\
     | xargs apt-get install -y | log
     
     #pacakges to REMOVE go here
@@ -667,6 +665,24 @@ deb_packages() {
     -e brltty \
     | xargs apt-get remove -y | log
     
+    install_chromium
+}
+
+install_chromium(){
+    # Check if chromium-browser is available
+if command -v chromium-browser >/dev/null; then
+    echo "chromium-browser is available. Installing..." | log
+    sudo apt-get update
+    sudo apt-get install -y chromium-browser
+# Check if chromium is available
+elif command -v chromium >/dev/null; then
+    echo "chromium is available. Installing..." | log
+    sudo apt-get update
+    sudo apt-get install -y chromium
+# If neither package is available, exit with an error
+else
+    echo "Neither chromium-browser nor chromium is available via apt." | log
+fi
 }
 
 prepare () {
@@ -746,7 +762,7 @@ prepare () {
         
         if [ $INSTALL -eq 1 ]; then
             OCTOEXEC="sudo -u $user /home/$user/oprint/bin/octoprint"
-            OCTOPIP="sudo -u $user /home/$user/oprint/bin/pip"
+            OCTOPIP="sudo -u $user /home/$user/oprint/bin/pip" 
             echo
             echo
             if prompt_confirm "Would you like to install and use ustreamer instead of mjpg-streamer?"; then
