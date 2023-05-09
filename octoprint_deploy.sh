@@ -787,14 +787,8 @@ prepare () {
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
-            systemctl restart octoprint.service
-            echo
-            echo
             initialize_nanofactory
-            echo 
-            echo
             systemctl restart octoprint.service
-            
         fi
         
         if [ $INSTALL -gt 1 ]; then
@@ -930,6 +924,7 @@ prepare () {
             
             #Prompt for admin user and firstrun stuff
             firstrun
+            initialize_nanofactory
             echo 
             echo
             echo 'type: linux' >> /etc/octoprint_deploy
@@ -937,15 +932,7 @@ prepare () {
             echo -e "\033[0;31mConnect to your template instance and setup the admin user if you have not done so already.\033[0m"
             systemctl start octoprint_default.service
             systemctl enable octoprint_default.service
-            echo
-            echo
             #this restart seems necessary in some cases
-            systemctl restart octoprint_default.service
-            echo
-            echo
-            initialize_nanofactory
-            echo
-            echo
             systemctl restart octoprint_default.service
         fi
         echo 'instance:generic port:5000' > /etc/octoprint_instances
@@ -966,10 +953,18 @@ prepare () {
 }
 
 initialize_nanofactory() {
-    echo "Waiting for OctoPrint to start..."
-    while ! lsof -i :5000 >/dev/null 2>&1; do sleep 1s; done
+    echo "Initializing NanoFactory" | log
+    check_nanofactory_folder
     generate_nanofactory_apikey "/home/$user/.octoprint/data" "$OCTOADMIN"
     master_device_id_input "/home/$user/.octoprint/data"
+}
+
+check_nanofactory_folder(){
+    if [ ! -d "/home/$user/.octoprint/data/NanoFactory" ]; then
+        echo "Creating NanoFactory folder" | log
+        sudo -u $user mkdir /home/$user/.octoprint/data/NanoFactory
+        sudo chmod -R a+rwx /home/$user/.octoprint/data/NanoFactory
+    fi
 }
 
 generate_nanofactory_apikey (){
