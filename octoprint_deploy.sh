@@ -189,7 +189,7 @@ new_instance () {
         fi
     
         if prompt_confirm "Specify a different Master Device ID?"; then
-            master_device_id_input "/home/$user/.$INSTANCE/data"
+            master_device_id_input "/home/$user/.$INSTANCE/data/NanoFactory"
         fi 
     fi
     
@@ -953,17 +953,20 @@ prepare () {
 }
 
 initialize_nanofactory() {
+    echo
+    echo
     echo "Initializing NanoFactory" | log
-    check_nanofactory_folder
+    check_nanofactory_folder "/home/$user/.octoprint/data/NanoFactory"
     generate_nanofactory_apikey "/home/$user/.octoprint/data" "$OCTOADMIN"
-    master_device_id_input "/home/$user/.octoprint/data"
+    master_device_id_input "/home/$user/.octoprint/data/NanoFactory"
 }
 
 check_nanofactory_folder(){
-    if [ ! -d "/home/$user/.octoprint/data/NanoFactory" ]; then
+    path="$1"
+    if [ ! -d "$path" ]; then
         echo "Creating NanoFactory folder" | log
-        sudo -u $user mkdir /home/$user/.octoprint/data/NanoFactory
-        sudo chmod -R a+rwx /home/$user/.octoprint/data/NanoFactory
+        sudo -u $user mkdir "$path"
+        sudo chmod -R a+rwx "$path"
     fi
 }
 
@@ -1005,8 +1008,10 @@ master_device_id_input(){
 
     data_dir_path="$1"
 
+    check_nanofactory_folder "$data_dir_path"
+
     # Write the master device id to masterDeviceID.txt
-    echo "$MASTER_DEVICE_ID" > "$data_dir_path"/NanoFactory/masterDeviceID.txt
+    echo "$MASTER_DEVICE_ID" > "$data_dir_path"/masterDeviceID.txt
 }
 
 install_yq(){
