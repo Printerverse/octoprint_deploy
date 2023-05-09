@@ -788,7 +788,8 @@ prepare () {
             echo
             echo
             systemctl restart octoprint.service
-            sleep 5
+            echo
+            echo
             initialize_nanofactory
             echo 
             echo
@@ -940,7 +941,6 @@ prepare () {
             echo
             #this restart seems necessary in some cases
             systemctl restart octoprint_default.service
-            sleep 5
             echo
             echo
             initialize_nanofactory
@@ -966,6 +966,8 @@ prepare () {
 }
 
 initialize_nanofactory() {
+    echo "Waiting for OctoPrint to start..."
+    while ! lsof -i :5000 >/dev/null 2>&1; do sleep 1s; done
     generate_nanofactory_apikey "/home/$user/.octoprint/data" "$OCTOADMIN"
     master_device_id_input "/home/$user/.octoprint/data"
 }
