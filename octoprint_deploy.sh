@@ -787,7 +787,9 @@ prepare () {
             $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
-            master_device_id_input "/home/$user/.octoprint/data"
+            systemctl restart octoprint.service
+            sleep 5
+            initialize_nanofactory
             echo 
             echo
             systemctl restart octoprint.service
@@ -929,7 +931,6 @@ prepare () {
             firstrun
             echo 
             echo
-            master_device_id_input "/home/$user/.octoprint/data"
             echo 'type: linux' >> /etc/octoprint_deploy
             echo 'Starting template service on port 5000'
             echo -e "\033[0;31mConnect to your template instance and setup the admin user if you have not done so already.\033[0m"
@@ -938,6 +939,13 @@ prepare () {
             echo
             echo
             #this restart seems necessary in some cases
+            systemctl restart octoprint_default.service
+            sleep 5
+            echo
+            echo
+            initialize_nanofactory
+            echo
+            echo
             systemctl restart octoprint_default.service
         fi
         echo 'instance:generic port:5000' > /etc/octoprint_instances
@@ -955,6 +963,11 @@ prepare () {
         
     fi
     main_menu
+}
+
+initialize_nanofactory() {
+    generate_nanofactory_apikey "/home/$user/.octoprint/data" "$OCTOADMIN"
+    master_device_id_input "/home/$user/.octoprint/data"
 }
 
 generate_nanofactory_apikey (){
@@ -1058,10 +1071,7 @@ firstrun() {
         $OCTOEXEC config set server.onlineCheck.enabled true --bool | log
         $OCTOEXEC config set server.pluginBlacklist.enabled true --bool | log
         $OCTOEXEC config set plugins.tracking.enabled false --bool | log
-        $OCTOEXEC config set printerProfiles.default _default | log
-
-        generate_nanofactory_apikey "/home/$user/.octoprint/data" "$OCTOADMIN"
-            
+        $OCTOEXEC config set printerProfiles.default _default | log            
     fi
     
 }
