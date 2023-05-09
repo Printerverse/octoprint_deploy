@@ -664,8 +664,6 @@ deb_packages() {
     | grep --line-regexp --fixed-strings \
     -e brltty \
     | xargs apt-get remove -y | log
-    
-    install_chromium
 }
 
 install_chromium(){
