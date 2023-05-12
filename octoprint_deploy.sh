@@ -1217,7 +1217,7 @@ remove_camera_menu() {
 
 remove_everything() {
     get_settings
-    if prompt_confirm "Remove everything?"; then
+    if prompt_confirm "Yeet everything?"; then
         readarray -t instances < <(cat /etc/octoprint_instances | sed -n -e 's/^instance:\([[:graph:]]*\) .*/\1/p')
         unset 'instances[0]'
         readarray -t cameras < <(ls -1 /etc/systemd/system/cam*.service | sed -n -e 's/^.*\/\(.*\).service/\1/p')
