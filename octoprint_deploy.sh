@@ -669,20 +669,18 @@ deb_packages() {
 }
 
 install_chromium(){
-    echo "Installing Chromium Snap" | log
-    sudo snap install chromium
     # Check if chromium-browser is available
-# if command -v chromium-browser >/dev/null; then
-#     echo "chromium-browser is available. Installing..." | log
-#     sudo apt-get install -y chromium-browser
-# # Check if chromium is available
-# elif command -v chromium >/dev/null; then
-#     echo "chromium is available. Installing..." | log
-#     sudo apt-get install -y chromium
-# # If neither package is available, exit with an error
-# else
-#     echo "Neither chromium-browser nor chromium is available via apt." | log
-# fi
+    if command -v chromium-browser >/dev/null; then
+        echo "chromium-browser is available. Installing..." | log
+        sudo apt-get install -y chromium-browser
+    # Check if chromium is available
+    elif command -v chromium >/dev/null; then
+        echo "chromium is available. Installing..." | log
+        sudo apt-get install -y chromium
+    # If neither package is available, exit with an error
+    else
+        echo "Neither chromium-browser nor chromium is available via apt." | log
+    fi
 }
 
 prepare () {
