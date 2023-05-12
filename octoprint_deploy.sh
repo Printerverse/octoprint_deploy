@@ -1243,6 +1243,7 @@ remove_everything() {
         rm -rf /home/$user/OctoPrint
         rm -rf /home/$user/ustreamer
         rm -rf /home/$user/mjpg-streamer
+        rm -rf /home/$user/NanoFactory
         systemctl restart haproxy.service
         systemctl daemon-reload
         
