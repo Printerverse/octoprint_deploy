@@ -254,12 +254,17 @@ new_instance () {
             systemctl stop octoprint_default.service
             systemctl disable octoprint_default.service
         fi
-        
+
         #stop and disable default octoprint service (octopi)
         if [ -f "/etc/systemd/system/octoprint.service" ]; then
             systemctl stop octoprint.service
             systemctl disable octoprint.service
         fi
+        
+        # Stop all chromium instances
+        killall chromium-browser
+        killall chromium
+        killall chrome
         
         #Printer udev identifier technique - either Serial number or USB port
         #Serial Number
