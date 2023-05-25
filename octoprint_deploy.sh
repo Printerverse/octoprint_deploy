@@ -262,9 +262,7 @@ new_instance () {
         fi
         
         # Stop all chromium instances
-        killall chromium-browser
-        killall chromium
-        killall chrome
+        pkill -f chrom
         
         #Printer udev identifier technique - either Serial number or USB port
         #Serial Number
@@ -822,7 +820,7 @@ prepare () {
             echo
             echo
             echo 'Installing Octoprint-NanoFactory' | log
-            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/refs/heads/dev.zip"
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
             initialize_nanofactory
@@ -889,7 +887,7 @@ prepare () {
             echo
             echo
             echo 'Installing Octoprint-NanoFactory' | log
-            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/refs/heads/dev.zip"
+            $OCTOPIP install "https://github.com/Printerverse/Octoprint-NanoFactory/archive/main.zip"
             echo
             echo
             install_yq
